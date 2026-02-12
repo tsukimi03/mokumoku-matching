@@ -4,12 +4,18 @@ import { createClient } from '@/lib/supabase-browser'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { useRouter } from 'next/navigation'
+import { getRandomQuizzes, type Quiz } from '@/lib/quizzes'
 
 export default function MatchingPage() {
   const [waiting, setWaiting] = useState(false)
   const [queueId, setQueueId] = useState<string | null>(null)
   const [userProfile, setUserProfile] = useState<any>(null)
   const [clickCount, setClickCount] = useState(0)
+  const [quizzes, setQuizzes] = useState<Quiz[]>([])
+  const [currentQuizIndex, setCurrentQuizIndex] = useState(0)
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null)
+  const [isAnswered, setIsAnswered] = useState(false)
+  const [score, setScore] = useState(0)
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const router = useRouter()
   const supabase = createClient()
@@ -45,7 +51,7 @@ export default function MatchingPage() {
     } as any
   }, [])
 
-  // プロフィール読み込み
+  // プロフィール読み込み & クイズ初期化
   useEffect(() => {
     const loadProfile = async () => {
       const { data: { user } } = await supabase.auth.getUser()
@@ -53,6 +59,10 @@ export default function MatchingPage() {
       const { data: profile } = await supabase.from('users').select('*').eq('id', user.id).single()
       if (profile) {
         setUserProfile(profile)
+        // 職種に応じたクイズを生成
+        const primaryJob = profile.job_categories?.[0] || 'other'
+        const generatedQuizzes = getRandomQuizzes(primaryJob, 10)
+        setQuizzes(generatedQuizzes)
       }
     }
     loadProfile()
@@ -128,6 +138,32 @@ export default function MatchingPage() {
     setQueueId(null)
   }
 
+  const handleQuizAnswer = (answerIndex: number) => {
+    if (isAnswered) return
+
+    setSelectedAnswer(answerIndex)
+    setIsAnswered(true)
+
+    if (answerIndex === quizzes[currentQuizIndex].correctIndex) {
+      setScore(score + 1)
+    }
+  }
+
+  const handleNextQuiz = () => {
+    if (currentQuizIndex < quizzes.length - 1) {
+      setCurrentQuizIndex(currentQuizIndex + 1)
+      setSelectedAnswer(null)
+      setIsAnswered(false)
+    }
+  }
+
+  const resetQuiz = () => {
+    setCurrentQuizIndex(0)
+    setSelectedAnswer(null)
+    setIsAnswered(false)
+    setScore(0)
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <Card className="p-12 max-w-lg w-full text-center">
@@ -180,6 +216,36 @@ export default function MatchingPage() {
               </p>
             </div>
 
+            {/* 必須マナー */}
+            <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-6">
+              <div className="flex items-start gap-3 mb-3">
+                <span className="text-2xl">📝</span>
+                <div className="text-left flex-1">
+                  <p className="font-bold text-sm text-blue-900 mb-2">
+                    セッションでの必須マナー
+                  </p>
+                  <div className="space-y-2 text-xs text-gray-700">
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span><strong>最初は挨拶</strong>：「よろしくお願いします！」と一言</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span><strong>集中タイム</strong>：25分間は各自の作業に集中</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span><strong>終了時にお礼</strong>：「お疲れ様でした！」で気持ちよく終了</span>
+                    </div>
+                    <div className="flex items-start gap-2">
+                      <span className="text-green-600 font-bold">✓</span>
+                      <span><strong>カメラ・音声OFF推奨</strong>：お互いの負担を減らす</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* 音声通知案内 */}
             <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4 mb-6">
               <div className="flex items-start gap-3">
@@ -196,26 +262,110 @@ export default function MatchingPage() {
               </div>
             </div>
 
-            {/* 簡易ゲーム */}
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-lg p-6 mb-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-                <span>🎮</span>
-                <span>待ち時間の暇つぶし</span>
-              </h3>
-              <div className="bg-white rounded-lg p-6 text-center">
-                <div className="text-6xl mb-3">🍅</div>
-                <p className="text-sm text-gray-600 mb-4">タップして集中力を高めよう！</p>
-                <button
-                  onClick={() => setClickCount(prev => prev + 1)}
-                  className="bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold text-3xl w-32 h-32 rounded-full shadow-lg hover:scale-110 transition-transform active:scale-95"
-                >
-                  {clickCount}
-                </button>
-                <p className="text-xs text-gray-500 mt-3">
-                  {clickCount >= 100 ? '🔥 すごい集中力！' : clickCount >= 50 ? '💪 いい感じ！' : 'タップしてみよう'}
-                </p>
+            {/* 職種別クイズ */}
+            {quizzes.length > 0 && (
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-lg p-6 mb-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                    <span>🧠</span>
+                    <span>職種別クイズに挑戦！</span>
+                  </h3>
+                  <div className="text-sm font-semibold text-purple-600">
+                    {currentQuizIndex + 1} / {quizzes.length}
+                  </div>
+                </div>
+
+                {currentQuizIndex < quizzes.length ? (
+                  <div className="bg-white rounded-lg p-6">
+                    <p className="text-base font-semibold text-gray-900 mb-4 leading-relaxed">
+                      Q{currentQuizIndex + 1}. {quizzes[currentQuizIndex].question}
+                    </p>
+
+                    <div className="space-y-3 mb-4">
+                      {quizzes[currentQuizIndex].options.map((option, index) => {
+                        const isCorrect = index === quizzes[currentQuizIndex].correctIndex
+                        const isSelected = selectedAnswer === index
+                        const showResult = isAnswered
+
+                        let bgColor = 'bg-gray-50 hover:bg-gray-100'
+                        let borderColor = 'border-gray-200'
+                        let textColor = 'text-gray-900'
+
+                        if (showResult) {
+                          if (isCorrect) {
+                            bgColor = 'bg-green-50'
+                            borderColor = 'border-green-400'
+                            textColor = 'text-green-900'
+                          } else if (isSelected) {
+                            bgColor = 'bg-red-50'
+                            borderColor = 'border-red-400'
+                            textColor = 'text-red-900'
+                          }
+                        } else if (isSelected) {
+                          bgColor = 'bg-purple-50'
+                          borderColor = 'border-purple-400'
+                        }
+
+                        return (
+                          <button
+                            key={index}
+                            onClick={() => handleQuizAnswer(index)}
+                            disabled={isAnswered}
+                            className={`w-full text-left p-4 rounded-lg border-2 transition-all ${bgColor} ${borderColor} ${textColor} ${!isAnswered ? 'cursor-pointer' : 'cursor-default'}`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium">{option}</span>
+                              {showResult && isCorrect && <span className="text-lg">✓</span>}
+                              {showResult && isSelected && !isCorrect && <span className="text-lg">✗</span>}
+                            </div>
+                          </button>
+                        )
+                      })}
+                    </div>
+
+                    {isAnswered && (
+                      <div className="mb-4">
+                        {quizzes[currentQuizIndex].explanation && (
+                          <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-3">
+                            <p className="text-xs text-blue-900">
+                              💡 {quizzes[currentQuizIndex].explanation}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {isAnswered && currentQuizIndex < quizzes.length - 1 && (
+                      <Button onClick={handleNextQuiz} className="w-full">
+                        次の問題へ →
+                      </Button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="bg-white rounded-lg p-6 text-center">
+                    <div className="text-6xl mb-4">🎉</div>
+                    <p className="text-2xl font-bold text-gray-900 mb-2">
+                      お疲れ様でした！
+                    </p>
+                    <p className="text-4xl font-bold text-purple-600 mb-4">
+                      {score} / {quizzes.length} 問正解
+                    </p>
+                    <p className="text-sm text-gray-600 mb-4">
+                      {score === quizzes.length
+                        ? '🔥 完璧です！素晴らしい！'
+                        : score >= quizzes.length * 0.7
+                        ? '💪 よくできました！'
+                        : score >= quizzes.length * 0.5
+                        ? '👍 まずまずです！'
+                        : '📚 復習して頑張りましょう！'}
+                    </p>
+                    <Button onClick={resetQuiz} variant="outline" className="w-full">
+                      もう一度挑戦する
+                    </Button>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
 
             <Button onClick={cancelWaiting} variant="outline" className="w-full">
               キャンセル

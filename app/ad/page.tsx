@@ -23,8 +23,13 @@ export default function AdLandingPage() {
           <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             {/* Left: Text Content */}
             <div className="space-y-6">
-              <div className="inline-block bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-semibold">
-                🎉 β版テスター募集中 - 完全無料
+              <div className="flex flex-wrap gap-2">
+                <div className="inline-block bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-semibold">
+                  🎉 β版テスター募集中 - 完全無料
+                </div>
+                <div className="inline-block bg-gradient-to-r from-yellow-300 to-orange-300 text-purple-900 px-4 py-2 rounded-full text-sm font-bold border-2 border-yellow-400 animate-pulse shadow-lg">
+                  💼 仕事や協力者が見つかるかも！
+                </div>
               </div>
               <h2 className="text-5xl md:text-6xl font-bold leading-tight">
                 圧倒的な集中力を、いつでも。
