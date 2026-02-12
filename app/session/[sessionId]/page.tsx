@@ -7,6 +7,7 @@ import DailyVideoRoom from '@/components/DailyVideoRoom'
 import SessionChat from '@/components/SessionChat'
 import BGMPlayer from '@/components/BGMPlayer'
 import TomikoVideoAvatar from '@/components/TomikoVideoAvatar'
+import ReportUserModal from '@/components/ReportUserModal'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -49,6 +50,7 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
   const [tomikoActive, setTomikoActive] = useState(false)
   const [rematchingInProgress, setRematchingInProgress] = useState(false)
   const [tomikoSpeaking, setTomikoSpeaking] = useState(false)
+  const [reportModalOpen, setReportModalOpen] = useState(false)
 
   // セッションデータ取得
   useEffect(() => {
@@ -349,6 +351,13 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* メインコンテンツ */}
         <div className="lg:col-span-2 space-y-4">
+          {/* ビデオルーム（最上部） */}
+          <DailyVideoRoom
+            roomUrl={session.daily_room_url}
+            onLeave={handleEarlyEnd}
+            onPartnerLeave={handlePartnerLeft}
+          />
+
           {/* タイマー */}
           <Card>
             <CardContent className="p-6 text-center">
@@ -382,11 +391,126 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
             </CardContent>
           </Card>
 
-          {/* 相手のプロフィール */}
+          {/* 登美子さん（AI秘書） - 相手が退室した時に表示 */}
+          {tomikoActive && (
+            <Card className="mt-4 bg-gradient-to-br from-slate-100 via-blue-50 to-slate-100 border-2 border-slate-300 relative overflow-hidden">
+              {/* オフィス風背景 */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-900 to-slate-800"></div>
+                <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-blue-300/30 to-transparent"></div>
+                <div className="absolute bottom-0 right-0 w-2/3 h-2/3">
+                  <div className="grid grid-cols-6 gap-2 opacity-20">
+                    {[...Array(24)].map((_, i) => (
+                      <div key={i} className="bg-slate-600 rounded aspect-square"></div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <CardContent className="p-6 relative z-10">
+                <div className="flex items-start gap-4">
+                  {/* 登美子さんのAIアバター（動画対応） */}
+                  <div className="flex-shrink-0">
+                    <TomikoVideoAvatar
+                      isActive={tomikoActive}
+                      message="お疲れ様です！登美子です。一緒にお仕事頑張りましょうね。"
+                    />
+                    <div className="text-center mt-2">
+                      <span className="text-sm font-bold text-gray-900">登美子さん</span>
+                      <div className="text-xs text-slate-600 flex items-center justify-center gap-1">
+                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                        <span>AI秘書</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* メッセージエリア */}
+                  <div className="flex-1">
+                    <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg border-2 border-slate-300">
+                      <div className="space-y-3">
+                        <p className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                          <span className="text-2xl">👋</span>
+                          <span>お疲れ様です！お相手が退室されました。</span>
+                        </p>
+                        <p className="text-sm text-gray-700 leading-relaxed">
+                          少々お待ちください。すぐに次の作業仲間を探しますね！<br />
+                          その間、今日の作業は順調ですか？😊
+                        </p>
+                        <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-3 text-sm text-gray-700 shadow-sm">
+                          <p className="font-semibold mb-1 flex items-center gap-2">
+                            <span className="text-lg">💡</span>
+                            <span>ワンポイントアドバイス</span>
+                          </p>
+                          <p className="text-xs leading-relaxed">
+                            ポモドーロの休憩時間には、軽いストレッチや水分補給がおすすめです。
+                            リフレッシュして次のセッションに臨みましょう！
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 再マッチングボタン */}
+                    <div className="mt-4 text-center">
+                      {!rematchingInProgress ? (
+                        <Button
+                          onClick={handleRematch}
+                          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                        >
+                          新しい相手を探す 🔍
+                        </Button>
+                      ) : (
+                        <div className="flex items-center justify-center gap-2 text-purple-600">
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600"></div>
+                          <span className="text-sm font-semibold">マッチング中...</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* 早期終了ボタン */}
+          <div className="text-center space-y-3">
+            <div className="flex gap-3 justify-center">
+              <Button
+                variant="destructive"
+                onClick={handleEarlyEnd}
+                className="px-8"
+              >
+                セッションを終了する
+              </Button>
+
+              {/* テスト用：登美子さんを呼び出すボタン */}
+              <Button
+                variant="outline"
+                onClick={handlePartnerLeft}
+                className="px-8 border-pink-400 text-pink-600 hover:bg-pink-50"
+              >
+                🧪 登美子さんテスト
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500">
+              終了後はフィードバックをお願いします
+            </p>
+          </div>
+
+          {/* 相手のプロフィール（下部） */}
           {partner && (
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-lg">作業仲間</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg">作業仲間</CardTitle>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setReportModalOpen(true)}
+                  className="text-gray-500 hover:text-red-600 text-xs"
+                >
+                  🚨 通報
+                </Button>
+              </div>
             </CardHeader>
             <CardContent>
               <div className="flex items-center gap-4">
@@ -544,96 +668,9 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
           </Card>
           )}
 
-          {/* ビデオルーム */}
-          <DailyVideoRoom
-            roomUrl={session.daily_room_url}
-            onLeave={handleEarlyEnd}
-            onPartnerLeave={handlePartnerLeft}
-          />
-
-          {/* 登美子さん（AI秘書） - 相手が退室した時に表示 */}
-          {tomikoActive && (
-            <Card className="mt-4 bg-gradient-to-br from-slate-100 via-blue-50 to-slate-100 border-2 border-slate-300 relative overflow-hidden">
-              {/* オフィス風背景 */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-900 to-slate-800"></div>
-                <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-blue-300/30 to-transparent"></div>
-                <div className="absolute bottom-0 right-0 w-2/3 h-2/3">
-                  <div className="grid grid-cols-6 gap-2 opacity-20">
-                    {[...Array(24)].map((_, i) => (
-                      <div key={i} className="bg-slate-600 rounded aspect-square"></div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <CardContent className="p-6 relative z-10">
-                <div className="flex items-start gap-4">
-                  {/* 登美子さんのAIアバター（動画対応） */}
-                  <div className="flex-shrink-0">
-                    <TomikoVideoAvatar
-                      isActive={tomikoActive}
-                      message="お疲れ様です！登美子です。一緒にお仕事頑張りましょうね。"
-                    />
-                    <div className="text-center mt-2">
-                      <span className="text-sm font-bold text-gray-900">登美子さん</span>
-                      <div className="text-xs text-slate-600 flex items-center justify-center gap-1">
-                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
-                        <span>AI秘書</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* メッセージエリア */}
-                  <div className="flex-1">
-                    <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg border-2 border-slate-300">
-                      <div className="space-y-3">
-                        <p className="text-base font-semibold text-gray-900 flex items-center gap-2">
-                          <span className="text-2xl">👋</span>
-                          <span>お疲れ様です！お相手が退室されました。</span>
-                        </p>
-                        <p className="text-sm text-gray-700 leading-relaxed">
-                          少々お待ちください。すぐに次の作業仲間を探しますね！<br />
-                          その間、今日の作業は順調ですか？😊
-                        </p>
-                        <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-3 text-sm text-gray-700 shadow-sm">
-                          <p className="font-semibold mb-1 flex items-center gap-2">
-                            <span className="text-lg">💡</span>
-                            <span>ワンポイントアドバイス</span>
-                          </p>
-                          <p className="text-xs leading-relaxed">
-                            ポモドーロの休憩時間には、軽いストレッチや水分補給がおすすめです。
-                            リフレッシュして次のセッションに臨みましょう！
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* 再マッチングボタン */}
-                    <div className="mt-4 text-center">
-                      {!rematchingInProgress ? (
-                        <Button
-                          onClick={handleRematch}
-                          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
-                        >
-                          新しい相手を探す 🔍
-                        </Button>
-                      ) : (
-                        <div className="flex items-center justify-center gap-2 text-purple-600">
-                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600"></div>
-                          <span className="text-sm font-semibold">マッチング中...</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* パートナー情報バー（動画下） */}
+          {/* パートナー情報バー */}
           {partner && (
-            <Card className="mt-4">
+            <Card>
               <CardContent className="p-4 space-y-3">
                 {/* 在住地表示（県のみ） */}
                 <div className="flex items-center gap-2 text-sm">
@@ -661,31 +698,6 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
               </CardContent>
             </Card>
           )}
-
-          {/* 早期終了ボタン */}
-          <div className="text-center space-y-3">
-            <div className="flex gap-3 justify-center">
-              <Button
-                variant="destructive"
-                onClick={handleEarlyEnd}
-                className="px-8"
-              >
-                セッションを終了する
-              </Button>
-
-              {/* テスト用：登美子さんを呼び出すボタン */}
-              <Button
-                variant="outline"
-                onClick={handlePartnerLeft}
-                className="px-8 border-pink-400 text-pink-600 hover:bg-pink-50"
-              >
-                🧪 登美子さんテスト
-              </Button>
-            </div>
-            <p className="text-xs text-gray-500">
-              終了後はフィードバックをお願いします
-            </p>
-          </div>
         </div>
 
         {/* サイドバー */}
@@ -700,6 +712,17 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
         </div>
       </div>
       </div>
+
+      {/* 通報モーダル */}
+      {partner && (
+        <ReportUserModal
+          isOpen={reportModalOpen}
+          onClose={() => setReportModalOpen(false)}
+          reportedUserId={partner.id}
+          reportedUserName={partner.display_name}
+          sessionId={sessionId}
+        />
+      )}
     </div>
   )
 }
