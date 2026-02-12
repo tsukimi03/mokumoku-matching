@@ -387,34 +387,75 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
 
           {/* 登美子さん（AI秘書） - 相手が退室した時に表示 */}
           {tomikoActive && (
-            <Card className="mt-4 bg-gradient-to-r from-pink-50 to-purple-50 border-2 border-pink-300">
-              <CardContent className="p-6">
+            <Card className="mt-4 bg-gradient-to-br from-slate-100 via-blue-50 to-slate-100 border-2 border-slate-300 relative overflow-hidden">
+              {/* オフィス風背景 */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-900 to-slate-800"></div>
+                <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-blue-300/30 to-transparent"></div>
+                <div className="absolute bottom-0 right-0 w-2/3 h-2/3">
+                  <div className="grid grid-cols-6 gap-2 opacity-20">
+                    {[...Array(24)].map((_, i) => (
+                      <div key={i} className="bg-slate-600 rounded aspect-square"></div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <CardContent className="p-6 relative z-10">
                 <div className="flex items-start gap-4">
-                  {/* 登美子さんのアバター */}
+                  {/* 登美子さんのAIアバター */}
                   <div className="flex-shrink-0">
-                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-400 to-purple-400 flex items-center justify-center text-4xl shadow-lg animate-pulse">
-                      👩‍💼
+                    <div className="relative">
+                      {/* アバター画像風 */}
+                      <div className="w-24 h-24 rounded-full overflow-hidden shadow-2xl border-4 border-white">
+                        <div className="w-full h-full bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 flex items-center justify-center relative">
+                          {/* 顔の輪郭 */}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-16 h-20 bg-gradient-to-b from-amber-100 to-amber-200 rounded-full"></div>
+                          </div>
+                          {/* 髪 */}
+                          <div className="absolute top-0 inset-x-0 h-12 bg-gradient-to-b from-slate-800 to-slate-700 rounded-t-full"></div>
+                          {/* 目 */}
+                          <div className="absolute top-8 left-1/2 -translate-x-1/2 flex gap-3">
+                            <div className="w-2 h-3 bg-slate-800 rounded-full"></div>
+                            <div className="w-2 h-3 bg-slate-800 rounded-full"></div>
+                          </div>
+                          {/* 口 */}
+                          <div className="absolute top-12 left-1/2 -translate-x-1/2 w-4 h-2 border-b-2 border-rose-400 rounded-full"></div>
+                          {/* スーツ */}
+                          <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-b from-slate-700 to-slate-800"></div>
+                        </div>
+                      </div>
+                      {/* オンライン状態インジケーター */}
+                      <div className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full animate-pulse"></div>
                     </div>
                     <div className="text-center mt-2">
                       <span className="text-sm font-bold text-gray-900">登美子さん</span>
-                      <div className="text-xs text-gray-600">AI秘書</div>
+                      <div className="text-xs text-slate-600 flex items-center justify-center gap-1">
+                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                        <span>AI秘書</span>
+                      </div>
                     </div>
                   </div>
 
                   {/* メッセージエリア */}
                   <div className="flex-1">
-                    <div className="bg-white rounded-lg p-4 shadow-md border-2 border-pink-200">
+                    <div className="bg-white/95 backdrop-blur-sm rounded-lg p-4 shadow-lg border-2 border-slate-300">
                       <div className="space-y-3">
-                        <p className="text-base font-semibold text-gray-900">
-                          お疲れ様です！お相手が退室されました。
+                        <p className="text-base font-semibold text-gray-900 flex items-center gap-2">
+                          <span className="text-2xl">👋</span>
+                          <span>お疲れ様です！お相手が退室されました。</span>
                         </p>
                         <p className="text-sm text-gray-700 leading-relaxed">
                           少々お待ちください。すぐに次の作業仲間を探しますね！<br />
                           その間、今日の作業は順調ですか？😊
                         </p>
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-gray-700">
-                          <p className="font-semibold mb-1">💡 ワンポイントアドバイス</p>
-                          <p className="text-xs">
+                        <div className="bg-blue-50 border-2 border-blue-300 rounded-lg p-3 text-sm text-gray-700 shadow-sm">
+                          <p className="font-semibold mb-1 flex items-center gap-2">
+                            <span className="text-lg">💡</span>
+                            <span>ワンポイントアドバイス</span>
+                          </p>
+                          <p className="text-xs leading-relaxed">
                             ポモドーロの休憩時間には、軽いストレッチや水分補給がおすすめです。
                             リフレッシュして次のセッションに臨みましょう！
                           </p>
