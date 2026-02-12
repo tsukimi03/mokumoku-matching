@@ -260,6 +260,130 @@ export const jobQuizzes: JobQuizzes = {
       explanation: 'Key Performance Indicator（重要業績評価指標）の略です'
     }
   ],
+  '動画編集': [
+    {
+      question: '一般的な動画のフレームレートは？',
+      options: ['24fps', '30fps', '60fps', '120fps'],
+      correctIndex: 1,
+      explanation: '30fps（フレーム毎秒）が一般的です'
+    },
+    {
+      question: 'Adobe Premiere Proで使われるショートカット（Mac）で「再生/停止」は？',
+      options: ['Space', 'Enter', 'Tab', 'Esc'],
+      correctIndex: 0,
+      explanation: 'Spaceキーで再生/停止できます'
+    },
+    {
+      question: '動画のアスペクト比で、YouTubeで推奨されるのは？',
+      options: ['4:3', '16:9', '1:1', '9:16'],
+      correctIndex: 1,
+      explanation: '16:9が一般的な横長動画の比率です'
+    },
+    {
+      question: 'カラーグレーディングとカラーコレクションの違いは？',
+      options: ['同じもの', 'グレーディングは色の補正、コレクションは演出', 'コレクションは色の補正、グレーディングは演出', '全く異なる技術'],
+      correctIndex: 2,
+      explanation: 'カラーコレクション=補正、カラーグレーディング=演出的な色付け'
+    },
+    {
+      question: 'トランジション効果で最も一般的なのは？',
+      options: ['ワイプ', 'ディゾルブ', 'カット', 'フェード'],
+      correctIndex: 2,
+      explanation: 'カット（単純な切り替え）が最も基本的です'
+    },
+    {
+      question: 'ビットレートが高いと？',
+      options: ['画質が良くなる', '画質が悪くなる', 'ファイルサイズが小さくなる', '編集速度が上がる'],
+      correctIndex: 0,
+      explanation: 'ビットレートが高いほど画質が良くなります'
+    },
+    {
+      question: 'キーフレームとは？',
+      options: ['重要なシーン', 'アニメーションの始点・終点', 'カット点', 'タイトル画面'],
+      correctIndex: 1,
+      explanation: 'キーフレームでアニメーションの変化を指定します'
+    },
+    {
+      question: 'BGMの音量調整で一般的な目安は？',
+      options: ['-6dB〜-12dB', '0dB', '+6dB', '-30dB'],
+      correctIndex: 0,
+      explanation: 'ナレーションやSEとのバランスで-6dB〜-12dB程度が一般的です'
+    },
+    {
+      question: 'エンコード（書き出し）時に最も重要な設定は？',
+      options: ['解像度とコーデック', 'タイトル名', 'プロジェクト名', 'フォルダ名'],
+      correctIndex: 0,
+      explanation: '解像度（1080p等）とコーデック（H.264等）が重要です'
+    },
+    {
+      question: 'YouTube用動画のサムネイル推奨サイズは？',
+      options: ['1920x1080', '1280x720', '640x360', '1280x1024'],
+      correctIndex: 1,
+      explanation: '1280x720（16:9）が推奨されます'
+    }
+  ],
+  'コンサル': [
+    {
+      question: 'ビジネスフレームワークで「3C分析」の3Cとは？',
+      options: ['Customer, Company, Competitor', 'Cost, Cash, Credit', 'Create, Change, Control', 'Culture, Climate, Communication'],
+      correctIndex: 0,
+      explanation: '顧客（Customer）、自社（Company）、競合（Competitor）の分析です'
+    },
+    {
+      question: 'SWOT分析の「T」は何を表す？',
+      options: ['Target（目標）', 'Threat（脅威）', 'Trend（傾向）', 'Technology（技術）'],
+      correctIndex: 1,
+      explanation: 'Threat（脅威）を表します'
+    },
+    {
+      question: 'ロジックツリーを使う目的は？',
+      options: ['問題を要素分解する', '売上を計算する', 'スケジュールを立てる', '人員配置を決める'],
+      correctIndex: 0,
+      explanation: '問題を構造的に分解・分析するツールです'
+    },
+    {
+      question: 'MECE（ミーシー）とは？',
+      options: ['漏れなく・ダブりなく', '効率的に・迅速に', '正確に・丁寧に', '戦略的に・計画的に'],
+      correctIndex: 0,
+      explanation: 'Mutually Exclusive and Collectively Exhaustive（漏れなくダブりなく）の略です'
+    },
+    {
+      question: 'KGI（Key Goal Indicator）とは？',
+      options: ['最終的な目標指標', '重要業績評価指標', '重要成功要因', '重要リスク指標'],
+      correctIndex: 0,
+      explanation: 'Key Goal Indicator（重要目標達成指標）です'
+    },
+    {
+      question: 'PDCAサイクルの「C」は？',
+      options: ['Create（創造）', 'Check（評価）', 'Change（変更）', 'Control（管理）'],
+      correctIndex: 1,
+      explanation: 'Check（評価・検証）を表します'
+    },
+    {
+      question: 'ボストン・コンサルティング・グループのマトリクスで「花形」とは？',
+      options: ['高成長・高シェア', '低成長・高シェア', '高成長・低シェア', '低成長・低シェア'],
+      correctIndex: 0,
+      explanation: '市場成長率が高く、市場シェアも高い事業です'
+    },
+    {
+      question: 'ファシリテーションで最も重要なスキルは？',
+      options: ['話す力', '聞く力', '書く力', '読む力'],
+      correctIndex: 1,
+      explanation: '参加者の意見を引き出す「聞く力」が最も重要です'
+    },
+    {
+      question: 'ROI（Return on Investment）とは？',
+      options: ['投資利益率', '売上高利益率', '資本回転率', '総資産利益率'],
+      correctIndex: 0,
+      explanation: 'Return on Investment（投資利益率）です'
+    },
+    {
+      question: 'ビジネスモデルキャンバスの9要素に含まれないのは？',
+      options: ['顧客セグメント', '収益の流れ', '競合分析', '価値提案'],
+      correctIndex: 2,
+      explanation: '競合分析はビジネスモデルキャンバスに含まれません'
+    }
+  ],
   'その他': [
     {
       question: 'ポモドーロ・テクニックの1セッションは何分？',
@@ -327,10 +451,19 @@ export const jobQuizzes: JobQuizzes = {
 // 職種名のマッピング（users.job_categoriesの値に対応）
 export const jobCategoryMapping: { [key: string]: string } = {
   'engineer': 'エンジニア',
+  'エンジニア': 'エンジニア',
   'designer': 'デザイナー',
+  'デザイナー': 'デザイナー',
   'writer': 'ライター',
+  'ライター': 'ライター',
   'marketer': 'マーケター',
-  'other': 'その他'
+  'マーケター': 'マーケター',
+  'video_editor': '動画編集',
+  '動画編集': '動画編集',
+  'consultant': 'コンサル',
+  'コンサル': 'コンサル',
+  'other': 'その他',
+  'その他': 'その他'
 }
 
 // ランダムにクイズを取得する関数

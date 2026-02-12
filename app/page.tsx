@@ -494,6 +494,154 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Comparison Table */}
+      <section className="container mx-auto px-4 py-20 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="inline-block bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-bold mb-4">
+              📊 サービス比較
+            </div>
+            <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              他サービスとの違い
+            </h3>
+            <p className="text-lg text-gray-600">
+              もくもく作業マッチングが選ばれる理由
+            </p>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse bg-white rounded-2xl overflow-hidden shadow-xl">
+              <thead>
+                <tr className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+                  <th className="p-4 text-left font-bold text-lg">機能</th>
+                  <th className="p-4 text-center font-bold text-lg bg-yellow-400 text-gray-900">
+                    <div className="flex flex-col items-center">
+                      <span className="text-2xl mb-1">🏆</span>
+                      <span>本サービス</span>
+                    </div>
+                  </th>
+                  <th className="p-4 text-center font-bold">A社</th>
+                  <th className="p-4 text-center font-bold">B社</th>
+                  <th className="p-4 text-center font-bold">C社</th>
+                </tr>
+              </thead>
+              <tbody className="text-center">
+                <tr className="border-b border-gray-200 hover:bg-gray-50 transition">
+                  <td className="p-4 text-left font-semibold text-gray-900">見知らぬ人とマッチング</td>
+                  <td className="p-4 bg-green-50 font-bold">
+                    <span className="text-3xl text-green-600">○</span>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-2xl text-red-500">×</span>
+                    <div className="text-xs text-gray-500">友達のみ</div>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-2xl text-red-500">×</span>
+                    <div className="text-xs text-gray-500">一人作業</div>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-2xl text-red-500">×</span>
+                    <div className="text-xs text-gray-500">友達のみ</div>
+                  </td>
+                </tr>
+                <tr className="border-b border-gray-200 hover:bg-gray-50 transition">
+                  <td className="p-4 text-left font-semibold text-gray-900">ポモドーロ機能</td>
+                  <td className="p-4 bg-green-50 font-bold">
+                    <span className="text-3xl text-green-600">○</span>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-2xl text-red-500">×</span>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-3xl text-green-600">○</span>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-2xl text-red-500">×</span>
+                  </td>
+                </tr>
+                <tr className="border-b border-gray-200 hover:bg-gray-50 transition">
+                  <td className="p-4 text-left font-semibold text-gray-900">カメラOFF推奨</td>
+                  <td className="p-4 bg-green-50 font-bold">
+                    <span className="text-3xl text-green-600">○</span>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-2xl text-red-500">×</span>
+                    <div className="text-xs text-gray-500">カメラ必須</div>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-3xl text-green-600">○</span>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-2xl text-red-500">×</span>
+                    <div className="text-xs text-gray-500">カメラ必須</div>
+                  </td>
+                </tr>
+                <tr className="border-b border-gray-200 hover:bg-gray-50 transition">
+                  <td className="p-4 text-left font-semibold text-gray-900">仕事・協業募集機能</td>
+                  <td className="p-4 bg-green-50 font-bold">
+                    <span className="text-3xl text-green-600">○</span>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-2xl text-red-500">×</span>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-2xl text-red-500">×</span>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-2xl text-red-500">×</span>
+                  </td>
+                </tr>
+                <tr className="border-b border-gray-200 hover:bg-gray-50 transition">
+                  <td className="p-4 text-left font-semibold text-gray-900">即座にマッチング</td>
+                  <td className="p-4 bg-green-50 font-bold">
+                    <span className="text-3xl text-green-600">○</span>
+                    <div className="text-xs text-green-700">平均30秒</div>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-2xl text-yellow-500">△</span>
+                    <div className="text-xs text-gray-500">要事前調整</div>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-3xl text-green-600">○</span>
+                  </td>
+                  <td className="p-4">
+                    <span className="text-2xl text-yellow-500">△</span>
+                    <div className="text-xs text-gray-500">要事前調整</div>
+                  </td>
+                </tr>
+                <tr className="hover:bg-gray-50 transition">
+                  <td className="p-4 text-left font-semibold text-gray-900">料金</td>
+                  <td className="p-4 bg-green-50 font-bold">
+                    <div className="text-2xl text-green-600 font-bold">無料</div>
+                    <div className="text-xs text-green-700">β版</div>
+                  </td>
+                  <td className="p-4">
+                    <div className="text-sm text-gray-600">月額1,980円</div>
+                  </td>
+                  <td className="p-4">
+                    <div className="text-sm text-gray-600">無料</div>
+                  </td>
+                  <td className="p-4">
+                    <div className="text-sm text-gray-600">月額980円</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-600 mb-6">
+              ※ 他サービスは匿名化しています。2026年2月時点の情報です。
+            </p>
+            <Link href="/signup">
+              <Button size="lg" className="text-lg px-10 py-6 shadow-lg hover:shadow-xl transition">
+                今すぐ無料で始める →
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Collaboration & Work Opportunities */}
       <section className="container mx-auto px-4 py-20">
         <div className="max-w-5xl mx-auto">
