@@ -44,6 +44,9 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
   const [extensionCount, setExtensionCount] = useState(0)
   const [extendedMinutes, setExtendedMinutes] = useState(0)
   const [extending, setExtending] = useState(false)
+  const [partnerLeft, setPartnerLeft] = useState(false)
+  const [tomikoActive, setTomikoActive] = useState(false)
+  const [rematchingInProgress, setRematchingInProgress] = useState(false)
 
   // セッションデータ取得
   useEffect(() => {
@@ -381,6 +384,65 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
             roomUrl={session.daily_room_url}
             onLeave={handleEarlyEnd}
           />
+
+          {/* 登美子さん（AI秘書） - 相手が退室した時に表示 */}
+          {tomikoActive && (
+            <Card className="mt-4 bg-gradient-to-r from-pink-50 to-purple-50 border-2 border-pink-300">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  {/* 登美子さんのアバター */}
+                  <div className="flex-shrink-0">
+                    <div className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-400 to-purple-400 flex items-center justify-center text-4xl shadow-lg animate-pulse">
+                      👩‍💼
+                    </div>
+                    <div className="text-center mt-2">
+                      <span className="text-sm font-bold text-gray-900">登美子さん</span>
+                      <div className="text-xs text-gray-600">AI秘書</div>
+                    </div>
+                  </div>
+
+                  {/* メッセージエリア */}
+                  <div className="flex-1">
+                    <div className="bg-white rounded-lg p-4 shadow-md border-2 border-pink-200">
+                      <div className="space-y-3">
+                        <p className="text-base font-semibold text-gray-900">
+                          お疲れ様です！お相手が退室されました。
+                        </p>
+                        <p className="text-sm text-gray-700 leading-relaxed">
+                          少々お待ちください。すぐに次の作業仲間を探しますね！<br />
+                          その間、今日の作業は順調ですか？😊
+                        </p>
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-gray-700">
+                          <p className="font-semibold mb-1">💡 ワンポイントアドバイス</p>
+                          <p className="text-xs">
+                            ポモドーロの休憩時間には、軽いストレッチや水分補給がおすすめです。
+                            リフレッシュして次のセッションに臨みましょう！
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 再マッチングボタン */}
+                    <div className="mt-4 text-center">
+                      {!rematchingInProgress ? (
+                        <Button
+                          onClick={() => setRematchingInProgress(true)}
+                          className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                        >
+                          新しい相手を探す 🔍
+                        </Button>
+                      ) : (
+                        <div className="flex items-center justify-center gap-2 text-purple-600">
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-purple-600"></div>
+                          <span className="text-sm font-semibold">マッチング中...</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* パートナー情報バー（動画下） */}
           {partner && (
