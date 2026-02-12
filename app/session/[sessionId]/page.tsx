@@ -6,6 +6,7 @@ import { createClient } from '@/lib/supabase-browser'
 import DailyVideoRoom from '@/components/DailyVideoRoom'
 import SessionChat from '@/components/SessionChat'
 import BGMPlayer from '@/components/BGMPlayer'
+import TomikoVideoAvatar from '@/components/TomikoVideoAvatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
@@ -160,26 +161,67 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
     router.push(`/session/${sessionId}/feedback`)
   }
 
-  // 登美子さんの音声挨拶
-  const speakTomikoGreeting = () => {
-    if ('speechSynthesis' in window) {
-      setTomikoSpeaking(true)
-      const utterance = new SpeechSynthesisUtterance('お疲れ様です！登美子です。一緒にお仕事頑張りましょうね。今から新しい作業仲間を探しますので、少々お待ちください')
-      utterance.lang = 'ja-JP'
-      utterance.rate = 1.0
-      utterance.pitch = 1.2
-      utterance.volume = 0.8
+  // 登美子さんの音声挨拶（ChatGPT連携）
+  const speakTomikoGreeting = async () => {
+    setTomikoSpeaking(true)
 
-      utterance.onend = () => {
+    try {
+      // ChatGPT APIから動的なメッセージを取得
+      const response = await fetch('/api/chat/tomiko', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: '相手が退室しました。新しい相手を探す前に、励ましの言葉をください。',
+          context: {
+            sessionDuration: Math.floor((25 * 60 - timeLeft) / 60),
+            partnerLeft: true
+          }
+        })
+      })
+
+      const data = await response.json()
+      const greetingMessage = data.message || 'お疲れ様です！登美子です。一緒にお仕事頑張りましょうね。'
+
+      // 音声で読み上げ
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(greetingMessage)
+        utterance.lang = 'ja-JP'
+        utterance.rate = 1.0
+        utterance.pitch = 1.2
+        utterance.volume = 0.8
+
+        utterance.onend = () => {
+          setTomikoSpeaking(false)
+          // 音声終了後、自動的に再マッチング開始
+          handleRematch()
+        }
+
+        window.speechSynthesis.speak(utterance)
+      } else {
+        // 音声合成非対応の場合は、即座に再マッチング開始
         setTomikoSpeaking(false)
-        // 音声終了後、自動的に再マッチング開始
         handleRematch()
       }
-
-      window.speechSynthesis.speak(utterance)
-    } else {
-      // 音声合成非対応の場合は、即座に再マッチング開始
-      handleRematch()
+    } catch (error) {
+      console.error('Failed to get greeting from ChatGPT:', error)
+      // エラー時はデフォルトメッセージで音声再生
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance('お疲れ様です！登美子です。新しい作業仲間を探しますので、少々お待ちください')
+        utterance.lang = 'ja-JP'
+        utterance.rate = 1.0
+        utterance.pitch = 1.2
+        utterance.volume = 0.8
+        utterance.onend = () => {
+          setTomikoSpeaking(false)
+          handleRematch()
+        }
+        window.speechSynthesis.speak(utterance)
+      } else {
+        setTomikoSpeaking(false)
+        handleRematch()
+      }
     }
   }
 
@@ -506,6 +548,7 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
           <DailyVideoRoom
             roomUrl={session.daily_room_url}
             onLeave={handleEarlyEnd}
+            onPartnerLeave={handlePartnerLeft}
           />
 
           {/* 登美子さん（AI秘書） - 相手が退室した時に表示 */}
@@ -526,32 +569,12 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
 
               <CardContent className="p-6 relative z-10">
                 <div className="flex items-start gap-4">
-                  {/* 登美子さんのAIアバター */}
+                  {/* 登美子さんのAIアバター（動画対応） */}
                   <div className="flex-shrink-0">
-                    <div className="relative">
-                      {/* アバター画像風 */}
-                      <div className="w-24 h-24 rounded-full overflow-hidden shadow-2xl border-4 border-white">
-                        <div className="w-full h-full bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 flex items-center justify-center relative">
-                          {/* 顔の輪郭 */}
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <div className="w-16 h-20 bg-gradient-to-b from-amber-100 to-amber-200 rounded-full"></div>
-                          </div>
-                          {/* 髪 */}
-                          <div className="absolute top-0 inset-x-0 h-12 bg-gradient-to-b from-slate-800 to-slate-700 rounded-t-full"></div>
-                          {/* 目 */}
-                          <div className="absolute top-8 left-1/2 -translate-x-1/2 flex gap-3">
-                            <div className="w-2 h-3 bg-slate-800 rounded-full"></div>
-                            <div className="w-2 h-3 bg-slate-800 rounded-full"></div>
-                          </div>
-                          {/* 口 */}
-                          <div className="absolute top-12 left-1/2 -translate-x-1/2 w-4 h-2 border-b-2 border-rose-400 rounded-full"></div>
-                          {/* スーツ */}
-                          <div className="absolute bottom-0 inset-x-0 h-8 bg-gradient-to-b from-slate-700 to-slate-800"></div>
-                        </div>
-                      </div>
-                      {/* オンライン状態インジケーター */}
-                      <div className="absolute bottom-1 right-1 w-5 h-5 bg-green-500 border-2 border-white rounded-full animate-pulse"></div>
-                    </div>
+                    <TomikoVideoAvatar
+                      isActive={tomikoActive}
+                      message="お疲れ様です！登美子です。一緒にお仕事頑張りましょうね。"
+                    />
                     <div className="text-center mt-2">
                       <span className="text-sm font-bold text-gray-900">登美子さん</span>
                       <div className="text-xs text-slate-600 flex items-center justify-center gap-1">

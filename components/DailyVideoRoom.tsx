@@ -10,9 +10,10 @@ import { Mic, MicOff, Video, VideoOff } from 'lucide-react'
 interface DailyVideoRoomProps {
   roomUrl: string
   onLeave?: () => void
+  onPartnerLeave?: () => void
 }
 
-function VideoRoom({ roomUrl, onLeave }: DailyVideoRoomProps) {
+function VideoRoom({ roomUrl, onLeave, onPartnerLeave }: DailyVideoRoomProps) {
   const daily = useDaily()
   const participantIds = useParticipantIds()
   const [isMuted, setIsMuted] = useState(true)
@@ -24,10 +25,21 @@ function VideoRoom({ roomUrl, onLeave }: DailyVideoRoomProps) {
     // ルームに参加
     daily.join({ url: roomUrl })
 
+    // 相手の退室を検知
+    const handleParticipantLeft = (event: any) => {
+      // ローカル参加者以外（＝相手）が退室した場合
+      if (event.participant && !event.participant.local) {
+        onPartnerLeave?.()
+      }
+    }
+
+    daily.on('participant-left', handleParticipantLeft)
+
     return () => {
+      daily.off('participant-left', handleParticipantLeft)
       daily.leave()
     }
-  }, [daily, roomUrl])
+  }, [daily, roomUrl, onPartnerLeave])
 
   const toggleAudio = () => {
     if (!daily) return
@@ -92,7 +104,7 @@ function VideoRoom({ roomUrl, onLeave }: DailyVideoRoomProps) {
   )
 }
 
-export default function DailyVideoRoom({ roomUrl, onLeave }: DailyVideoRoomProps) {
+export default function DailyVideoRoom({ roomUrl, onLeave, onPartnerLeave }: DailyVideoRoomProps) {
   const [isMuted, setIsMuted] = useState(true)
   const [isVideoOff, setIsVideoOff] = useState(true)
 
