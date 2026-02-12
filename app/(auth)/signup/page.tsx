@@ -6,11 +6,42 @@ import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { useRouter } from 'next/navigation'
 
+// エラーメッセージを日本語化
+const translateError = (message: string): string => {
+  const translations: Record<string, string> = {
+    'User already registered': 'このメールアドレスは既に登録されています',
+    'Invalid email': 'メールアドレスの形式が正しくありません',
+    'Password is too short': 'パスワードが短すぎます（6文字以上必要です）',
+    'Password should be at least 6 characters': 'パスワードは6文字以上にしてください',
+    'Unable to validate email address': 'メールアドレスを検証できませんでした',
+    'Signup requires a valid password': '有効なパスワードを入力してください',
+  }
+  return translations[message] || `登録エラー: ${message}`
+}
+
+// パスワード強度チェック
+const checkPasswordStrength = (password: string): { isStrong: boolean; message: string } => {
+  if (password.length < 8) {
+    return { isStrong: false, message: 'パスワードは8文字以上にしてください' }
+  }
+  if (!/[a-z]/.test(password)) {
+    return { isStrong: false, message: 'パスワードには小文字を含めてください' }
+  }
+  if (!/[A-Z]/.test(password)) {
+    return { isStrong: false, message: 'パスワードには大文字を含めてください' }
+  }
+  if (!/[0-9]/.test(password)) {
+    return { isStrong: false, message: 'パスワードには数字を含めてください' }
+  }
+  return { isStrong: true, message: '強力なパスワードです' }
+}
+
 export default function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [agreedToPolicy, setAgreedToPolicy] = useState(false)
+  const [passwordStrength, setPasswordStrength] = useState<{ isStrong: boolean; message: string } | null>(null)
   const router = useRouter()
   const supabase = createClient()
 
@@ -19,6 +50,13 @@ export default function SignupPage() {
 
     if (!agreedToPolicy) {
       alert('利用規約とプライバシーポリシーに同意してください')
+      return
+    }
+
+    // パスワード強度チェック
+    const strength = checkPasswordStrength(password)
+    if (!strength.isStrong) {
+      alert(strength.message)
       return
     }
 
@@ -33,7 +71,7 @@ export default function SignupPage() {
     })
 
     if (error) {
-      alert(error.message)
+      alert(translateError(error.message))
     } else {
       // メール確認不要の場合、直接プロフィール編集へ
       router.push('/profile/edit')
@@ -60,15 +98,27 @@ export default function SignupPage() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">パスワード（6文字以上）</label>
+            <label className="block text-sm font-medium mb-2">パスワード（8文字以上、大小英字・数字を含む）</label>
             <Input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                if (e.target.value) {
+                  setPasswordStrength(checkPasswordStrength(e.target.value))
+                } else {
+                  setPasswordStrength(null)
+                }
+              }}
               placeholder="••••••••"
-              minLength={6}
+              minLength={8}
               required
             />
+            {passwordStrength && (
+              <div className={`text-xs mt-2 ${passwordStrength.isStrong ? 'text-green-600' : 'text-red-600'}`}>
+                {passwordStrength.isStrong ? '✓ ' : '⚠️ '}{passwordStrength.message}
+              </div>
+            )}
           </div>
 
           <div className="space-y-3">

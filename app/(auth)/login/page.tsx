@@ -6,15 +6,38 @@ import { Input } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { useRouter } from 'next/navigation'
 
+// エラーメッセージを日本語化
+const translateError = (message: string): string => {
+  const translations: Record<string, string> = {
+    'Invalid login credentials': 'メールアドレスまたはパスワードが正しくありません',
+    'Email not confirmed': 'メールアドレスが確認されていません。確認メールをご確認ください',
+    'User not found': 'ユーザーが見つかりませんでした',
+    'Invalid email': 'メールアドレスの形式が正しくありません',
+    'Password is too short': 'パスワードが短すぎます（6文字以上）',
+    'Unable to validate email address': 'メールアドレスを検証できませんでした',
+  }
+  return translations[message] || `ログインエラー: ${message}`
+}
+
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
+  const [loginAttempts, setLoginAttempts] = useState(0)
+  const [lockoutUntil, setLockoutUntil] = useState<number | null>(null)
   const router = useRouter()
   const supabase = createClient()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // レート制限チェック
+    if (lockoutUntil && Date.now() < lockoutUntil) {
+      const remainingSeconds = Math.ceil((lockoutUntil - Date.now()) / 1000)
+      alert(`ログイン試行回数が上限に達しました。${remainingSeconds}秒後に再試行してください。`)
+      return
+    }
+
     setLoading(true)
 
     const { error, data } = await supabase.auth.signInWithPassword({
@@ -23,10 +46,24 @@ export default function LoginPage() {
     })
 
     if (error) {
-      alert(error.message)
+      const newAttempts = loginAttempts + 1
+      setLoginAttempts(newAttempts)
+
+      // 5回失敗で30秒ロックアウト
+      if (newAttempts >= 5) {
+        const lockoutTime = Date.now() + 30000 // 30秒
+        setLockoutUntil(lockoutTime)
+        alert('ログイン試行回数が上限に達しました。30秒後に再試行してください。')
+      } else {
+        alert(translateError(error.message))
+      }
       setLoading(false)
       return
     }
+
+    // ログイン成功時はカウンターリセット
+    setLoginAttempts(0)
+    setLockoutUntil(null)
 
     // プロフィール完成状態をチェック
     if (data.user) {
@@ -62,7 +99,7 @@ export default function LoginPage() {
         redirectTo: `${window.location.origin}/auth/callback`
       }
     })
-    if (error) alert(error.message)
+    if (error) alert(translateError(error.message))
   }
 
   return (
