@@ -159,6 +159,95 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
     router.push(`/session/${sessionId}/feedback`)
   }
 
+  // 再マッチング処理
+  const handleRematch = async () => {
+    if (!currentUserId || rematchingInProgress) return
+
+    setRematchingInProgress(true)
+
+    try {
+      // 現在のセッションを終了
+      await supabase
+        .from('sessions')
+        .update({
+          status: 'partner_left',
+          ended_at: new Date().toISOString()
+        })
+        .eq('id', sessionId)
+
+      // プロフィール取得
+      const { data: profile } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', currentUserId)
+        .single()
+
+      if (!profile) {
+        alert('プロフィール情報の取得に失敗しました')
+        setRematchingInProgress(false)
+        return
+      }
+
+      // マッチングキューに再登録
+      const { data: queueData, error: queueError } = await supabase
+        .from('matching_queue')
+        .insert({
+          user_id: currentUserId,
+          area_prefecture: profile.area_prefecture,
+          area_city: profile.area_city,
+          available_times: profile.available_times,
+          status: 'waiting'
+        })
+        .select()
+        .single()
+
+      if (queueError) {
+        alert('マッチングキューへの登録に失敗しました')
+        setRematchingInProgress(false)
+        return
+      }
+
+      // マッチング処理を起動
+      await fetch('/api/matching/trigger', { method: 'POST' })
+
+      // マッチング成立を監視
+      const channel = supabase
+        .channel('rematch_queue')
+        .on(
+          'postgres_changes',
+          { event: 'UPDATE', schema: 'public', table: 'matching_queue', filter: `id=eq.${queueData.id}` },
+          (payload: any) => {
+            if (payload.new.status === 'matched') {
+              // ビープ音を鳴らす
+              const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+              const oscillator = audioContext.createOscillator()
+              const gainNode = audioContext.createGain()
+              oscillator.connect(gainNode)
+              gainNode.connect(audioContext.destination)
+              oscillator.frequency.value = 800
+              oscillator.type = 'sine'
+              gainNode.gain.setValueAtTime(0.3, audioContext.currentTime)
+              gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5)
+              oscillator.start(audioContext.currentTime)
+              oscillator.stop(audioContext.currentTime + 0.5)
+
+              // 新しいセッションにリダイレクト
+              setTimeout(() => {
+                router.push(`/session/${payload.new.session_id}`)
+              }, 500)
+
+              supabase.removeChannel(channel)
+            }
+          }
+        )
+        .subscribe()
+    } catch (error) {
+      console.error('Rematch error:', error)
+      alert('再マッチング中にエラーが発生しました')
+      setRematchingInProgress(false)
+    }
+  }
+
   // 時間フォーマット
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)
@@ -467,7 +556,7 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
                     <div className="mt-4 text-center">
                       {!rematchingInProgress ? (
                         <Button
-                          onClick={() => setRematchingInProgress(true)}
+                          onClick={handleRematch}
                           className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
                         >
                           新しい相手を探す 🔍
