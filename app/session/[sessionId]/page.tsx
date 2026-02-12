@@ -663,15 +663,26 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
           )}
 
           {/* 早期終了ボタン */}
-          <div className="text-center">
-            <Button
-              variant="destructive"
-              onClick={handleEarlyEnd}
-              className="px-8"
-            >
-              セッションを終了する
-            </Button>
-            <p className="text-xs text-gray-500 mt-2">
+          <div className="text-center space-y-3">
+            <div className="flex gap-3 justify-center">
+              <Button
+                variant="destructive"
+                onClick={handleEarlyEnd}
+                className="px-8"
+              >
+                セッションを終了する
+              </Button>
+
+              {/* テスト用：登美子さんを呼び出すボタン */}
+              <Button
+                variant="outline"
+                onClick={handlePartnerLeft}
+                className="px-8 border-pink-400 text-pink-600 hover:bg-pink-50"
+              >
+                🧪 登美子さんテスト
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500">
               終了後はフィードバックをお願いします
             </p>
           </div>
