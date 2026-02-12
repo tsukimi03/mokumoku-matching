@@ -6,7 +6,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* Header */}
-      <header className="container mx-auto px-4 py-6">
+      <header className="container mx-auto px-4 py-3">
         <nav className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-blue-600">もくもく作業マッチング</h1>
           <div className="flex gap-4">
@@ -21,17 +21,17 @@ export default function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="container mx-auto px-4 py-20">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+      <section className="container mx-auto px-4 py-8 md:py-12">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8 items-center">
           {/* Left: Text Content */}
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="inline-block bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-semibold">
               🎉 β版テスター募集中 - 完全無料
             </div>
-            <h2 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight">
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 leading-tight">
               圧倒的な集中力を、いつでも。
             </h2>
-            <p className="text-xl md:text-2xl text-gray-600">
+            <p className="text-lg md:text-xl text-gray-600">
               <span className="text-blue-600 font-bold">フリーランスの集中特化ツール。</span><br />
               見知らぬ人と25分のポモドーロで、驚くほど集中できる。
             </p>
@@ -57,11 +57,11 @@ export default function LandingPage() {
 
           {/* Right: Visual Design */}
           <div className="relative">
-            <div className="bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 rounded-3xl p-12 shadow-2xl">
+            <div className="bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 rounded-3xl p-6 md:p-8 shadow-2xl">
               {/* Central Focus Icon */}
-              <div className="text-center mb-8">
-                <div className="text-8xl mb-4 animate-pulse">💻</div>
-                <div className="text-2xl font-bold text-gray-800">集中モード ON</div>
+              <div className="text-center mb-4">
+                <div className="text-6xl md:text-7xl mb-2 animate-pulse">💻</div>
+                <div className="text-xl font-bold text-gray-800">集中モード ON</div>
               </div>
 
               {/* Connected Users Visualization */}

@@ -7,7 +7,7 @@ export default function AdLandingPage() {
     <div className="min-h-screen bg-white">
       {/* ヘッダー */}
       <header className="border-b bg-white sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div className="container mx-auto px-4 py-3 flex justify-between items-center">
           <h1 className="text-xl font-bold text-blue-600">もくもく作業マッチング</h1>
           <Link href="/signup">
             <Button size="lg" className="shadow-lg">
@@ -18,7 +18,7 @@ export default function AdLandingPage() {
       </header>
 
       {/* ヒーローセクション */}
-      <section className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-white py-20">
+      <section className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-600 text-white py-12 md:py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             {/* Left: Text Content */}
