@@ -163,6 +163,120 @@ export default function AdLandingPage() {
         </div>
       </section>
 
+      {/* ポモドーロ技術解説 */}
+      <section className="bg-white py-16">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            {/* タイトル */}
+            <div className="text-center mb-12">
+              <div className="inline-block bg-red-100 text-red-800 px-4 py-2 rounded-full text-sm font-bold mb-4">
+                🧠 科学的根拠
+              </div>
+              <h3 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                ポモドーロ・テクニックとは？
+              </h3>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                イタリア人のフランチェスコ・シリロが1980年代に考案した、<br className="hidden md:block" />
+                世界中で使われている時間管理術です。
+              </p>
+            </div>
+
+            {/* 3ステップ図解 */}
+            <div className="grid md:grid-cols-3 gap-6 mb-12">
+              <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-6 border-2 border-red-200 text-center">
+                <div className="text-6xl mb-4">🍅</div>
+                <div className="text-xl font-bold mb-2 text-gray-900">1. 25分集中</div>
+                <p className="text-sm text-gray-700">
+                  タイマーをセットして<br />25分間、1つのタスクに集中
+                </p>
+              </div>
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border-2 border-blue-200 text-center">
+                <div className="text-6xl mb-4">☕</div>
+                <div className="text-xl font-bold mb-2 text-gray-900">2. 5分休憩</div>
+                <p className="text-sm text-gray-700">
+                  短い休憩で脳をリフレッシュ<br />立ち上がって伸びをする
+                </p>
+              </div>
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-200 text-center">
+                <div className="text-6xl mb-4">🔄</div>
+                <div className="text-xl font-bold mb-2 text-gray-900">3. 繰り返す</div>
+                <p className="text-sm text-gray-700">
+                  4セット終わったら<br />15-30分の長い休憩
+                </p>
+              </div>
+            </div>
+
+            {/* 本サービスの革新性 */}
+            <div className="bg-gradient-to-br from-purple-900 to-indigo-900 rounded-3xl p-8 md:p-12 text-white shadow-2xl">
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <div className="flex-1">
+                  <div className="inline-block bg-yellow-400 text-purple-900 px-4 py-2 rounded-full text-sm font-bold mb-4">
+                    ⚡ 画期的な組み合わせ
+                  </div>
+                  <h4 className="text-2xl md:text-3xl font-bold mb-4 leading-tight">
+                    ポモドーロ × オンライン × 見知らぬ人<br />
+                    <span className="text-yellow-300">この組み合わせは、他に例がありません。</span>
+                  </h4>
+                  <p className="text-lg opacity-90 mb-6 leading-relaxed">
+                    従来のポモドーロアプリは「一人で」使うものでした。<br />
+                    しかし、人は「誰かが見ている」と感じると、集中力が劇的に向上します。<br className="hidden md:block" />
+                    （ホーソン効果 / 社会的促進効果）
+                  </p>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-white/10 backdrop-blur rounded-xl p-4">
+                      <div className="text-yellow-300 font-bold mb-1">🎯 適度な緊張感</div>
+                      <div className="text-sm opacity-90">知らない人だから<br />サボれない</div>
+                    </div>
+                    <div className="bg-white/10 backdrop-blur rounded-xl p-4">
+                      <div className="text-yellow-300 font-bold mb-1">🤝 共感の連帯</div>
+                      <div className="text-sm opacity-90">同じ時間に<br />頑張る仲間</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex-shrink-0">
+                  <div className="relative w-48 h-48 md:w-64 md:h-64">
+                    <div className="absolute inset-0 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full opacity-20 animate-pulse"></div>
+                    <div className="absolute inset-4 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full opacity-40 animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                    <div className="absolute inset-8 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full opacity-60 animate-pulse" style={{ animationDelay: '1s' }}></div>
+                    <div className="absolute inset-0 flex items-center justify-center text-8xl">
+                      🔥
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* 科学的根拠 */}
+            <div className="mt-12 grid md:grid-cols-2 gap-6">
+              <div className="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+                <div className="flex items-start gap-4">
+                  <div className="text-4xl">📚</div>
+                  <div>
+                    <h5 className="font-bold text-lg mb-2 text-gray-900">ポモドーロ効果</h5>
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      25分という時間は、人間の集中力が持続する最適な長さであることが研究で示されています。
+                      短すぎず長すぎない、この絶妙なバランスが生産性を最大化します。
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200">
+                <div className="flex items-start gap-4">
+                  <div className="text-4xl">👁️</div>
+                  <div>
+                    <h5 className="font-bold text-lg mb-2 text-gray-900">ホーソン効果</h5>
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      「人に見られている」と感じるだけで、作業効率が20-40%向上することが心理学研究で証明されています。
+                      本サービスは、この効果を最大限に活用しています。
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 問題提起 */}
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
