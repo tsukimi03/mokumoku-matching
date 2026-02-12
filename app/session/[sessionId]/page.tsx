@@ -47,6 +47,7 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
   const [partnerLeft, setPartnerLeft] = useState(false)
   const [tomikoActive, setTomikoActive] = useState(false)
   const [rematchingInProgress, setRematchingInProgress] = useState(false)
+  const [tomikoSpeaking, setTomikoSpeaking] = useState(false)
 
   // セッションデータ取得
   useEffect(() => {
@@ -157,6 +158,39 @@ export default function SessionPage({ params }: { params: Promise<{ sessionId: s
       .eq('id', sessionId)
 
     router.push(`/session/${sessionId}/feedback`)
+  }
+
+  // 登美子さんの音声挨拶
+  const speakTomikoGreeting = () => {
+    if ('speechSynthesis' in window) {
+      setTomikoSpeaking(true)
+      const utterance = new SpeechSynthesisUtterance('お疲れ様です！登美子です。一緒にお仕事頑張りましょうね。今から新しい作業仲間を探しますので、少々お待ちください')
+      utterance.lang = 'ja-JP'
+      utterance.rate = 1.0
+      utterance.pitch = 1.2
+      utterance.volume = 0.8
+
+      utterance.onend = () => {
+        setTomikoSpeaking(false)
+        // 音声終了後、自動的に再マッチング開始
+        handleRematch()
+      }
+
+      window.speechSynthesis.speak(utterance)
+    } else {
+      // 音声合成非対応の場合は、即座に再マッチング開始
+      handleRematch()
+    }
+  }
+
+  // 相手退室後の処理（25秒待機後に登美子さん登場）
+  const handlePartnerLeft = () => {
+    setPartnerLeft(true)
+
+    setTimeout(() => {
+      setTomikoActive(true)
+      speakTomikoGreeting()
+    }, 25000) // 25秒後
   }
 
   // 再マッチング処理
