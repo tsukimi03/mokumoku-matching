@@ -34,6 +34,11 @@ export async function POST() {
       .from('user_preferences')
       .select('user_id, preferred_user_id')
 
+    // ブロックリストを取得
+    const { data: allBlockedUsers } = await supabase
+      .from('blocked_users')
+      .select('blocker_id, blocked_id')
+
     // フィルタリング: 停止ユーザー、お試し期間終了で評価が悪いユーザーを除外
     const filteredQueue = queue?.filter(q => {
       const user = q.user as any
@@ -66,6 +71,15 @@ export async function POST() {
 
         // user2が「また会いたい」と思っているユーザーのリスト
         const user2Preferences = allPreferences?.filter(p => p.user_id === user2.user_id).map(p => p.preferred_user_id) || []
+
+        // ブロックチェック: 相互にブロックしていないか確認
+        const isUser1BlockedByUser2 = allBlockedUsers?.some(b => b.blocker_id === user2.user_id && b.blocked_id === user1.user_id)
+        const isUser2BlockedByUser1 = allBlockedUsers?.some(b => b.blocker_id === user1.user_id && b.blocked_id === user2.user_id)
+
+        // どちらかがブロックしている場合はマッチングしない
+        if (isUser1BlockedByUser2 || isUser2BlockedByUser1) {
+          continue
+        }
 
         // 相互に「また会いたい」リストに入っているかチェック
         const isMutualPreference = user1Preferences.includes(user2.user_id) && user2Preferences.includes(user1.user_id)
