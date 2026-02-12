@@ -246,29 +246,43 @@ export default function MatchingPage() {
               </div>
             </div>
 
-            {/* 音声通知案内 */}
-            <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4 mb-6">
-              <div className="flex items-start gap-3">
-                <span className="text-2xl">🔔</span>
-                <div className="text-left">
-                  <p className="font-semibold text-sm text-gray-900 mb-1">
-                    音声通知をONにしてください
+            {/* 音声通知案内 - 超目立つバージョン */}
+            <div className="relative bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 border-4 border-yellow-400 rounded-2xl p-6 mb-6 shadow-2xl animate-pulse">
+              <div className="absolute -top-3 -right-3 bg-yellow-400 text-red-600 font-black text-xs px-3 py-1 rounded-full border-2 border-red-500 animate-bounce">
+                重要！
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="relative">
+                    <span className="text-6xl animate-bounce">🔔</span>
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full animate-ping"></div>
+                  </div>
+                </div>
+                <div className="text-left flex-1">
+                  <p className="font-black text-2xl text-white mb-3 drop-shadow-lg">
+                    音声通知をONにしてください！
                   </p>
-                  <p className="text-xs text-gray-700 leading-relaxed">
-                    マッチングが成立したら音でお知らせします。<br />
-                    他のタブを見ている時も通知が届きます。
-                  </p>
+                  <div className="bg-white/90 backdrop-blur-sm rounded-lg p-4 shadow-lg">
+                    <p className="text-lg font-bold text-gray-900 mb-2 flex items-center gap-2">
+                      <span className="text-2xl">🎵</span>
+                      <span>マッチングが成立したら音でお知らせします</span>
+                    </p>
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      他のタブを見ている時も通知が届くので、<br />
+                      待ち時間を有効活用できます！
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* 職種別クイズ */}
+            {/* 実務スキルアップ */}
             {quizzes.length > 0 && (
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 rounded-lg p-6 mb-6">
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-300 rounded-lg p-6 mb-6 shadow-lg">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                    <span>🧠</span>
-                    <span>職種別クイズに挑戦！</span>
+                    <span>💡</span>
+                    <span>待ち時間で学ぶ！実務で使えるプロ知識</span>
                   </h3>
                   <div className="text-sm font-semibold text-purple-600">
                     {currentQuizIndex + 1} / {quizzes.length}

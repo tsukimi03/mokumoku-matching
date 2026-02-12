@@ -14,126 +14,126 @@ export type JobQuizzes = {
 export const jobQuizzes: JobQuizzes = {
   'エンジニア': [
     {
-      question: 'GitHubで変更を保存するコマンドは？',
-      options: ['git save', 'git commit', 'git push', 'git store'],
+      question: '本番環境で絶対にやってはいけないことは？',
+      options: ['ログを確認する', '直接DBを編集する', 'モニタリングツールを見る', 'エラーを報告する'],
       correctIndex: 1,
-      explanation: 'git commitでローカルに変更を保存します'
+      explanation: '本番DBの直接編集は事故の元！必ずバックアップとテスト環境で検証してから'
     },
     {
-      question: 'JavaScriptで非同期処理を扱うキーワードは？',
-      options: ['async/await', 'sync/wait', 'delay/wait', 'thread/sleep'],
-      correctIndex: 0,
-      explanation: 'async/awaitで非同期処理を読みやすく書けます'
-    },
-    {
-      question: 'CSSでフレックスボックスを使うプロパティは？',
-      options: ['display: box', 'display: flex', 'layout: flex', 'flexbox: true'],
+      question: 'コードレビューで最も重要なことは？',
+      options: ['細かい文法ミスを指摘', 'ロジックとセキュリティの確認', 'コメントの有無', 'コードの行数'],
       correctIndex: 1,
-      explanation: 'display: flexでフレックスボックスレイアウトが使えます'
+      explanation: 'バグやセキュリティホールを防ぐため、ロジックの確認が最優先'
     },
     {
-      question: 'REST APIで新規作成に使うHTTPメソッドは？',
-      options: ['GET', 'PUT', 'POST', 'DELETE'],
+      question: 'パスワードを保存する際の鉄則は？',
+      options: ['平文で保存', 'MD5でハッシュ化', 'bcryptでハッシュ化', 'Base64エンコード'],
       correctIndex: 2,
-      explanation: 'POSTで新しいリソースを作成します'
+      explanation: 'bcryptやArgon2などの強力なハッシュ関数を使う。MD5は脆弱！'
     },
     {
-      question: 'SQLでテーブルからデータを取得するコマンドは？',
-      options: ['GET', 'SELECT', 'FETCH', 'RETRIEVE'],
+      question: 'エラーが出た時、最初にすべきことは？',
+      options: ['すぐにStack Overflowで検索', 'エラーメッセージを読む', 'コードを全部書き直す', '諦める'],
       correctIndex: 1,
-      explanation: 'SELECT文でデータを取得します'
+      explanation: 'エラーメッセージには原因と行番号が書いてある。まずそこを確認！'
     },
     {
-      question: 'Dockerでコンテナを起動するコマンドは？',
-      options: ['docker start', 'docker run', 'docker exec', 'docker create'],
+      question: 'Gitで間違えたコミットを取り消すには？',
+      options: ['git undo', 'git revert', 'git delete', 'git cancel'],
       correctIndex: 1,
-      explanation: 'docker runでコンテナを作成・起動します'
+      explanation: 'git revertで安全に取り消せる。git reset --hardは危険！'
     },
     {
-      question: 'TypeScriptの型チェックを無視する記法は？',
-      options: ['// @ts-ignore', '// @no-check', '// @skip-type', '// @bypass'],
-      correctIndex: 0,
-      explanation: '// @ts-ignoreで次の行の型チェックを無視できます'
-    },
-    {
-      question: 'Reactでコンポーネントの状態を管理するフックは？',
-      options: ['useEffect', 'useState', 'useContext', 'useMemo'],
+      question: 'APIのレスポンスが遅い時、まず疑うべきは？',
+      options: ['フロントエンドのコード', 'N+1クエリ', 'CSSの読み込み', 'HTMLの構造'],
       correctIndex: 1,
-      explanation: 'useStateで状態管理ができます'
+      explanation: 'N+1クエリ（ループ内でDBアクセス）はパフォーマンス低下の主要因'
     },
     {
-      question: 'Node.jsでパッケージをインストールするコマンドは？',
-      options: ['npm add', 'npm install', 'npm get', 'npm download'],
+      question: 'セキュリティで最も危険な脆弱性は？',
+      options: ['CSSの読み込み順', 'SQLインジェクション', 'タブとスペースの混在', 'コメント不足'],
       correctIndex: 1,
-      explanation: 'npm installでパッケージをインストールします'
+      explanation: 'SQLインジェクションはDB全体が乗っ取られる可能性あり！必ず対策を'
     },
     {
-      question: 'JSONで文字列を表すときに使う記号は？',
-      options: ['シングルクォート', 'ダブルクォート', 'バッククォート', 'スラッシュ'],
+      question: 'デプロイ前に必ずすべきことは？',
+      options: ['コーヒーを飲む', 'テストを実行する', 'SNSに投稿', 'とりあえずデプロイ'],
       correctIndex: 1,
-      explanation: 'JSONでは文字列をダブルクォートで囲みます'
+      explanation: 'テストなしのデプロイは事故の元。CI/CDで自動化すると安心'
+    },
+    {
+      question: 'バグを見つけた時の正しい対応は？',
+      options: ['こっそり修正', '再現手順を記録→修正→テスト', 'すぐに修正', '無視する'],
+      correctIndex: 1,
+      explanation: '再現手順を記録しないと、同じバグが再発する可能性大'
+    },
+    {
+      question: 'コードの保守性を上げるために最も重要なことは？',
+      options: ['コメントを大量に書く', '関数を小さく分割する', '変数名を短くする', 'インデントをなくす'],
+      correctIndex: 1,
+      explanation: '1つの関数は1つの役割。小さく分割すると読みやすく、テストもしやすい'
     }
   ],
   'デザイナー': [
     {
-      question: 'RGBの「R」は何色を表す？',
-      options: ['Red', 'Rose', 'Rainbow', 'Royal'],
-      correctIndex: 0,
-      explanation: 'Rは赤色（Red）を表します'
-    },
-    {
-      question: 'Figmaで複数のオブジェクトをグループ化するショートカットは？（Mac）',
-      options: ['Cmd + G', 'Cmd + L', 'Cmd + B', 'Cmd + M'],
-      correctIndex: 0,
-      explanation: 'Cmd + Gでグループ化できます'
-    },
-    {
-      question: 'デザインの「余白」を英語で何という？',
-      options: ['Space', 'Margin', 'Padding', 'White space'],
-      correctIndex: 3,
-      explanation: 'White space（ホワイトスペース）が一般的です'
-    },
-    {
-      question: 'ゴールデンレシオ（黄金比）の比率は？',
-      options: ['1:1.414', '1:1.618', '1:1.732', '1:2'],
+      question: 'クライアントプレゼンで最も重要なことは？',
+      options: ['デザインの美しさ', 'なぜそのデザインか理由を説明', '最新トレンドの紹介', '色の名前を言う'],
       correctIndex: 1,
-      explanation: '1:1.618が黄金比です'
+      explanation: 'デザインの「理由」を説明できないと、クライアントは納得しない'
     },
     {
-      question: 'UIデザインで「ユーザーがクリックできる領域」を何という？',
-      options: ['タップエリア', 'ヒットエリア', 'クリックゾーン', 'インタラクションゾーン'],
+      question: 'ユーザビリティで最優先すべきことは？',
+      options: ['見た目の美しさ', '使いやすさ', 'アニメーション', '最新技術'],
       correctIndex: 1,
-      explanation: 'ヒットエリア（Hit area）と呼びます'
+      explanation: 'どんなに美しくても使いにくいデザインはNG。ユーザー目線が大切'
     },
     {
-      question: 'Webデザインで最も読みやすいとされる行の長さは？',
-      options: ['30-50文字', '50-75文字', '75-100文字', '100-120文字'],
+      question: 'コントラスト比が低いと何が問題？',
+      options: ['おしゃれに見えない', '文字が読めない', 'ファイルサイズが大きい', '印刷できない'],
       correctIndex: 1,
-      explanation: '50-75文字が読みやすいとされています'
+      explanation: 'WCAG基準で4.5:1以上推奨。視認性はアクセシビリティの基本'
     },
     {
-      question: 'カラーコードで「#FFFFFF」は何色？',
-      options: ['黒', '白', '赤', '青'],
+      question: 'レスポンシブデザインで避けるべきことは？',
+      options: ['モバイルファースト', 'PC版をそのまま縮小', 'タッチ操作の考慮', 'フレキシブルグリッド'],
       correctIndex: 1,
-      explanation: '#FFFFFFは白色です'
+      explanation: 'PC版の縮小は使いにくい！モバイル専用UIを設計する'
     },
     {
-      question: 'フォントの太さを表す単位は？',
-      options: ['px', 'pt', 'weight', 'size'],
-      correctIndex: 2,
-      explanation: 'font-weightで太さを指定します'
-    },
-    {
-      question: 'レスポンシブデザインでよく使われるブレークポイントは？',
-      options: ['320px, 768px, 1024px', '480px, 720px, 1080px', '500px, 800px, 1200px', '600px, 900px, 1400px'],
-      correctIndex: 0,
-      explanation: '320px（モバイル）、768px（タブレット）、1024px（PC）が一般的です'
-    },
-    {
-      question: 'デザインツールでベクターデータを扱えるのは？',
-      options: ['Photoshop', 'Illustrator', 'Lightroom', 'Premiere Pro'],
+      question: 'フォント選びで最も重要なことは？',
+      options: ['珍しさ', '読みやすさ', '値段の高さ', 'フォント数の多さ'],
       correctIndex: 1,
-      explanation: 'Illustratorはベクターデータを扱います'
+      explanation: 'どんなにおしゃれでも、読めないフォントは使えない'
+    },
+    {
+      question: 'デザインデータを納品する際に必須なことは？',
+      options: ['PSDファイルのみ', '画像書き出し＋元データ', '印刷したもの', 'スクリーンショット'],
+      correctIndex: 1,
+      explanation: '後で修正できるよう、元データも必ず納品する'
+    },
+    {
+      question: '色覚多様性（色弱）への配慮で重要なことは？',
+      options: ['派手な色を使う', '色だけで情報を伝えない', '赤と緑を多用', 'モノクロにする'],
+      correctIndex: 1,
+      explanation: '色+形、色+テキストなど、色以外の要素も組み合わせる'
+    },
+    {
+      question: 'ボタンデザインで避けるべきことは？',
+      options: ['影をつける', 'ボタンらしく見えない', '角丸にする', '色をつける'],
+      correctIndex: 1,
+      explanation: 'ボタンは「押せる」と分かるデザインに。アフォーダンスが重要'
+    },
+    {
+      question: '余白（ホワイトスペース）の役割は？',
+      options: ['無駄なスペース', '情報を整理し読みやすくする', 'ファイルサイズを増やす', '印刷コストを上げる'],
+      correctIndex: 1,
+      explanation: '余白は「何もない」のではなく、視線誘導と情報整理の要素'
+    },
+    {
+      question: 'Webフォント使用時に注意すべきことは？',
+      options: ['無制限に使う', '読み込み速度への影響', 'できるだけ多く', '価格の安さ'],
+      correctIndex: 1,
+      explanation: 'フォント読み込みで表示速度が遅くなる。必要最小限に絞る'
     }
   ],
   'ライター': [
