@@ -24,6 +24,7 @@ interface Report {
   reported_user: {
     display_name: string
     is_suspended: boolean
+    report_count: number
   }
 }
 
@@ -56,7 +57,7 @@ export default function AdminReportsPage() {
       .select(`
         *,
         reporter:users!reports_reporter_id_fkey(display_name),
-        reported_user:users!reports_reported_user_id_fkey(display_name, is_suspended)
+        reported_user:users!reports_reported_user_id_fkey(display_name, is_suspended, report_count)
       `)
       .order('created_at', { ascending: false })
 
@@ -223,9 +224,20 @@ export default function AdminReportsPage() {
                     <div>
                       <p className="text-sm font-semibold text-gray-700">通報された人</p>
                       <p className="text-sm">{report.reported_user.display_name}</p>
-                      {report.reported_user.is_suspended && (
-                        <Badge className="bg-red-500 mt-1">利用停止中</Badge>
-                      )}
+                      <div className="flex gap-2 mt-1">
+                        {report.reported_user.is_suspended && (
+                          <Badge className="bg-red-500">利用停止中</Badge>
+                        )}
+                        {report.reported_user.report_count > 0 && (
+                          <Badge className={`${
+                            report.reported_user.report_count >= 3 ? 'bg-red-600' :
+                            report.reported_user.report_count >= 2 ? 'bg-orange-500' :
+                            'bg-yellow-500'
+                          }`}>
+                            通報 {report.reported_user.report_count}回
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -242,6 +254,14 @@ export default function AdminReportsPage() {
                     <div>
                       <p className="text-sm font-semibold text-gray-700 mb-1">セッションID</p>
                       <p className="text-xs text-gray-500 font-mono">{report.session_id}</p>
+                    </div>
+                  )}
+
+                  {/* Admin Note（自動BANなど） */}
+                  {report.admin_note && (
+                    <div className="bg-blue-50 border border-blue-200 rounded p-3">
+                      <p className="text-sm font-semibold text-blue-900 mb-1">📝 管理メモ</p>
+                      <p className="text-sm text-blue-800">{report.admin_note}</p>
                     </div>
                   )}
 
